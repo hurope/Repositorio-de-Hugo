@@ -1,0 +1,97 @@
+creaproc:
+
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sched.h>
+int main()
+{
+ pid_t pid;
+ pid = fork();
+ switch (pid)
+ {
+ case -1:
+ printf ("No he podido crear el proceso hijo \n");
+ break;
+ case 0: 
+
+ printf ("Soy el hijo, mi PID es %d y mi PPID es %d \n",
+ getpid(), getppid());
+ sleep (20);
+ break;
+ default:
+ printf ("Soy el padre, mi PID es %d y el PID de mi hijo es %d \n",
+ getpid(), pid);
+ sleep (30);
+ }
+ printf ("Final de ejecución de %d \n", getpid());
+ exit (0);
+} 
+
+
+creaproc1:
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sched.h>
+int main ( ) {
+ int i;
+ int j;
+ pid_t pid;
+ pid = fork( );
+ switch (pid) {
+ case -1:
+ printf ("\nNo he podido crear el proceso hijo");
+ break;
+ case 0:
+ i = 0;
+ printf ("\nSoy el hijo, mi PID es %d y mi variable i (inicialmente a %d) es par", getpid(), i);
+ for ( j = 0; j < 5; j ++ ) {
+ i ++;
+ i ++;
+ printf ("\nSoy el hijo, mi variable i es %d", i); 
+
+ };
+ break;
+ default:
+ i = 1;
+ printf ("\nSoy el padre, mi PID es %d y mi variable i (inicialmente a %d) es impar", getpid(), i);
+ for ( j = 0; j < 5; j ++ ) {
+ i ++;
+ i ++;
+ printf ("\nSoy el padre, mi variable i es %d", i);
+ };
+ };
+ printf ("\nFinal de ejecucion de %d \n", getpid());
+ exit (0);
+} 
+
+
+creaproc3:
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main ( ) {
+ int estado, numero;
+ switch(fork()) {
+ case -1 : /* ERROR */
+ perror("Error en fork");
+ exit(1);
+ case 0 : /* HIJO */
+ numero = 13;
+ printf("Soy el hijo y muero con %d...\n", numero);
+ sleep(20);
+ exit(numero);
+ default : /* PADRE */
+ wait(&estado);
+ printf("Soy el padre. ");
+ if ((estado & 0x7F) != 0) {
+ printf("Mi hijo ha muerto con una señal.\n");
+ }
+ else {
+ printf("Mi hijo ha muerto con exit(%d).\n",
+ (estado>>8) & 0xFF);
+ }
+ exit(0);
+ }
+} 
